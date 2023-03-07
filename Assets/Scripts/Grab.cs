@@ -27,7 +27,7 @@ public class Grab : MonoBehaviour
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
         // layerMask = ~layerMask;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
         RaycastHit hit;
 
         // Object is translated along a plane
