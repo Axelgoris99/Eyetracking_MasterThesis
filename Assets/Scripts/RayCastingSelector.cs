@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using ViveSR.anipal.Eye;
 public class RayCastingSelector : MonoBehaviour
 {
     [SerializeField] private bool useMouse;
 	private static RayCastingSelector _instance;
-    public Vector3 ray;
+    [SerializeField] private SRanipal_GazeRaySample_v2 gazeRay;
+
+    public Ray ray;
+    public Camera cam;
+
+
     public static RayCastingSelector Instance
     {
         get
@@ -29,6 +35,10 @@ public class RayCastingSelector : MonoBehaviour
         {
             _instance = this;
         }
+        if(cam == null)
+        {
+            cam = Camera.main;
+        }
     }
 
     // Update is called once per frame
@@ -36,11 +46,11 @@ public class RayCastingSelector : MonoBehaviour
     {
         if (useMouse)
         {
-            ray = Input.mousePosition;
+            ray = cam.ScreenPointToRay(Input.mousePosition);
         }
         else
         {
-            Debug.Log("Need to implement Eye Tracking");
+            ray = new Ray(cam.transform.position, gazeRay.GazeDirectionCombined);
         }
     }
 }

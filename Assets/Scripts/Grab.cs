@@ -38,13 +38,13 @@ public class Grab : MonoBehaviour
         // But instead we want to collide against everything except layer blabla. The ~ operator does this, it inverts a bitmask.
         // layerMask = ~layerMask;
 
-        //Ray ray2 = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
+        //Ray ray2 = RayCastingSelector.Instance.ray;
         //Debug.DrawRay(ray2.origin, ray2.direction, Color.yellow);
 
         // Object is translated along a plane
         if (selectedObject != null)
         {
-            Ray ray = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
+            Ray ray = RayCastingSelector.Instance.ray;
             RaycastHit hit;
             //Debug.Log("Selected");
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -69,7 +69,7 @@ public class Grab : MonoBehaviour
     }
     void GrabInteractable()
     {
-        Ray ray = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
+        Ray ray = RayCastingSelector.Instance.ray;
         RaycastHit hit;
         //Debug.Log("Down");
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
