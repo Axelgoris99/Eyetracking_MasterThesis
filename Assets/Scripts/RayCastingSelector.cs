@@ -5,13 +5,18 @@ using UnityEngine;
 using ViveSR.anipal.Eye;
 public class RayCastingSelector : MonoBehaviour
 {
-    [SerializeField] private bool useMouse;
 	private static RayCastingSelector _instance;
-    [SerializeField] private SRanipal_GazeRaySample_v2 gazeRay;
+    [SerializeField] private GazeRay gazeRay;
+    [SerializeField] private LineRenderer GazeRayRenderer;
+    [SerializeField] private float lenghtRay = 25.0f;
 
     public Ray ray;
     public Camera cam;
-
+    public enum RayInputModality // your custom enumeration
+    {
+       Mouse, EyeTracking, HeadTracking
+    };
+    public RayInputModality dropDown;
 
     public static RayCastingSelector Instance
     {
@@ -44,13 +49,20 @@ public class RayCastingSelector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (useMouse)
+        switch (dropDown)
         {
-            ray = cam.ScreenPointToRay(Input.mousePosition);
+            case RayInputModality.EyeTracking:
+                //ray = new Ray(cam.transform.position + cam.transform.up * adjustRayOrigin, gazeRay.GazeDirectionCombined);
+                ray = new Ray(cam.transform.position, gazeRay.GazeDirectionCombined);
+                break;
+            case RayInputModality.Mouse:
+                ray = cam.ScreenPointToRay(Input.mousePosition);
+                break;
+            case RayInputModality.HeadTracking:
+                ray = new Ray(cam.transform.position, cam.transform.forward);
+                break;
         }
-        else
-        {
-            ray = new Ray(cam.transform.position, gazeRay.GazeDirectionCombined);
-        }
+        GazeRayRenderer.SetPosition(0, cam.transform.position );
+        GazeRayRenderer.SetPosition(1, cam.transform.position+ ray.direction * lenghtRay);
     }
 }
