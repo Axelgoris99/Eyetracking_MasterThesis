@@ -18,6 +18,10 @@ public class Grab : MonoBehaviour
         layerToInteractWith = 6;
         WordRecognizer.onGrab += GrabInteractable;
         WordRecognizer.onRelease += ReleaseInteractable;
+        if(cam == null)
+        {
+            cam = Camera.main;
+        }
     }
     private void OnDisable()
     {
@@ -34,9 +38,11 @@ public class Grab : MonoBehaviour
         // But instead we want to collide against everything except layer blabla. The ~ operator does this, it inverts a bitmask.
         // layerMask = ~layerMask;
 
+        //Ray ray2 = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
+        //Debug.DrawRay(ray2.origin, ray2.direction, Color.yellow);
 
         // Object is translated along a plane
-        if (selectedObject)
+        if (selectedObject != null)
         {
             Ray ray = cam.ScreenPointToRay(RayCastingSelector.Instance.ray);
             RaycastHit hit;
