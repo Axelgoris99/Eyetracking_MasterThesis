@@ -4,13 +4,25 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Assertions;
 using ViveSR.anipal.Eye;
-
+using TMPro;
 public class Wink : MonoBehaviour
 {
+    //In case you want to display values for the blink/wink interaction
+    //public TextMeshProUGUI left;
+    //public TextMeshProUGUI right;
+
+    //Send Events
+    public delegate void LeftWink();
+    public static event LeftWink onLeftWink;
+    public delegate void RightWink();
+    public static event RightWink onRightWink;
+
+
     public bool NeededToGetData = true;
     private Dictionary<EyeShape_v2, float> EyeWeightings = new Dictionary<EyeShape_v2, float>();
     private static EyeData_v2 eyeData = new EyeData_v2();
     private bool eye_callback_registered = false;
+
     private void Start()
     {
         if (!SRanipal_Eye_Framework.Instance.EnableEye)
@@ -61,8 +73,18 @@ public class Wink : MonoBehaviour
                 }
                 else
                     SRanipal_Eye_v2.GetEyeWeightings(out EyeWeightings);
-                Debug.Log("Gauche" + EyeWeightings[EyeShape_v2.Eye_Left_Blink]);
-                Debug.Log("Droite" + EyeWeightings[EyeShape_v2.Eye_Right_Blink]);
+                //left.text = EyeWeightings[EyeShape_v2.Eye_Left_Blink].ToString();
+                //right.text = EyeWeightings[EyeShape_v2.Eye_Right_Blink].ToString();
+
+                // If we wink only one eye, not when you naturally blink
+                if(EyeWeightings[EyeShape_v2.Eye_Left_Blink] > 0.7 && EyeWeightings[EyeShape_v2.Eye_Right_Blink] < 0.7)
+                {
+                    onLeftWink();
+                }
+                if (EyeWeightings[EyeShape_v2.Eye_Right_Blink] > 0.7 && EyeWeightings[EyeShape_v2.Eye_Left_Blink] < 0.7)
+                {
+                    onRightWink();
+                }
             }
             else
             {

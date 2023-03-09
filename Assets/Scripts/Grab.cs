@@ -18,6 +18,9 @@ public class Grab : MonoBehaviour
         layerToInteractWith = 6;
         WordRecognizer.onGrab += GrabInteractable;
         WordRecognizer.onRelease += ReleaseInteractable;
+        Wink.onLeftWink += HandleWink;
+        Wink.onRightWink += HandleWink;
+
         if(cam == null)
         {
             cam = Camera.main;
@@ -27,6 +30,9 @@ public class Grab : MonoBehaviour
     {
         WordRecognizer.onGrab -= GrabInteractable;
         WordRecognizer.onRelease -= ReleaseInteractable;
+
+        Wink.onLeftWink -= HandleWink;
+        Wink.onRightWink -= HandleWink;
     }
     // Update is called once per frame
     void Update()
@@ -88,6 +94,18 @@ public class Grab : MonoBehaviour
     {
         selectedObject = null;
         layerToInteractWith = 6;
+    }
+
+    void HandleWink()
+    {
+        if(selectedObject == null)
+        {
+            GrabInteractable();
+        }
+        else
+        {
+            ReleaseInteractable();
+        }
     }
 }
 
