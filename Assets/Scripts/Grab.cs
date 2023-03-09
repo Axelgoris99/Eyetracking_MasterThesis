@@ -23,20 +23,21 @@ public class Grab : MonoBehaviour
     void Start()
     {
         layerToInteractWith = 6;
-        WordRecognizer.onGrab += GrabInteractable;
+        WordRecognizer.onGrab += RaycastAgainstInteractable;
         WordRecognizer.onRelease += ReleaseInteractable;
         Wink.onLeftWink += HandleWink;
         Wink.onRightWink += HandleWink;
         Dwell.onDwell += HandleDwell;
+        DualGaze.onSelected += GrabInteractable;
 
-        if(cam == null)
+        if (cam == null)
         {
             cam = Camera.main;
         }
     }
     private void OnDisable()
     {
-        WordRecognizer.onGrab -= GrabInteractable;
+        WordRecognizer.onGrab -= RaycastAgainstInteractable;
         WordRecognizer.onRelease -= ReleaseInteractable;
 
         Wink.onLeftWink -= HandleWink;
@@ -68,12 +69,22 @@ public class Grab : MonoBehaviour
                 selectedObject.transform.position = hit.point;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            RaycastAgainstInteractable();
+        }
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            ReleaseInteractable();
+        }
+
         // If we click, we cast a ray and if the ray hits something from the right layer, the object is selected
         if (Input.GetButtonDown("Fire1"))
         {
-            GrabInteractable();
+            RaycastAgainstInteractable();
         }
-        
+
         // When we stop clicking, the object is deselected
         if (Input.GetButtonUp("Fire1"))
         {
@@ -83,30 +94,34 @@ public class Grab : MonoBehaviour
         // For debugging purpose
         // Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);       
     }
-    void GrabInteractable()
+
+    void RaycastAgainstInteractable()
     {
         Ray ray = RayCastingSelector.Instance.ray;
         RaycastHit hit;
         //Debug.Log("Down");
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
-            Transform objectHit = hit.transform;
-            camPlane.transform.position = objectHit.transform.position;
-
-            cubePos = objectHit.position;
-            // Do something with the object that was hit by the raycast.
-            selectedObject = objectHit.gameObject;
-            if(selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
-            {
-                comp.Grabbed = true;
-            }
-            layerToInteractWith = 7;
-            onGrab();
+            GrabInteractable(hit.transform);
         }
+    }
+    void GrabInteractable(Transform objectHit)
+    {
+        camPlane.transform.position = objectHit.transform.position;
+
+        cubePos = objectHit.position;
+        // Do something with the object that was hit by the raycast.
+        selectedObject = objectHit.gameObject;
+        if (selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
+        {
+            comp.Grabbed = true;
+        }
+        layerToInteractWith = 7;
+        onGrab();
     }
 
     void ReleaseInteractable()
-    {  
+    {
         if (selectedObject != null)
         {
             if (selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
@@ -121,9 +136,9 @@ public class Grab : MonoBehaviour
 
     void HandleWink()
     {
-        if(selectedObject == null)
+        if (selectedObject == null)
         {
-            GrabInteractable();
+            RaycastAgainstInteractable();
         }
         else
         {
@@ -135,7 +150,7 @@ public class Grab : MonoBehaviour
     {
         if (selectedObject == null)
         {
-            GrabInteractable();
+            RaycastAgainstInteractable();
         }
     }
 }

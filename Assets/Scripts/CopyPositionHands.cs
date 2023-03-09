@@ -14,6 +14,7 @@ public class CopyPositionHands : MonoBehaviour
     private void Start()
     {
         grabbed = true;
+
     }
     private void Update()
     {

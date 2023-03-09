@@ -61,5 +61,6 @@ public class Dwell : MonoBehaviour
     {
         grabbed = false;
         timer = timerRef;
+        selectedObject = null;
     }
 }
