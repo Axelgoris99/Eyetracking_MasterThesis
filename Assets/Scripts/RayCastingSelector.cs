@@ -5,19 +5,25 @@ using UnityEngine;
 using ViveSR.anipal.Eye;
 public class RayCastingSelector : MonoBehaviour
 {
-	private static RayCastingSelector _instance;
+    #region variables and members
+    private static RayCastingSelector _instance;
+    
+    // Rendering
     [SerializeField] private GazeRay gazeRay;
     [SerializeField] private LineRenderer GazeRayRenderer;
     [SerializeField] private float lenghtRay = 25.0f;
-
     public Ray ray;
     public Camera cam;
+
+    // Ray Input Selector Part 
     public enum RayInputModality // your custom enumeration
     {
        Mouse, EyeTracking, HeadTracking
     };
     public RayInputModality dropDown;
-
+    private int nbInputInEnum;
+    #endregion
+    #region Singleton
     public static RayCastingSelector Instance
     {
         get
@@ -25,9 +31,12 @@ public class RayCastingSelector : MonoBehaviour
             return _instance;
         }
     }
+
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
+        nbInputInEnum = System.Enum.GetValues(typeof(RayInputModality)).Length;
         //if(XRGeneralSettings.Instance.Manager.activeLoader != null)
         //{
         //    useMouse = false;
@@ -64,5 +73,12 @@ public class RayCastingSelector : MonoBehaviour
         }
         GazeRayRenderer.SetPosition(0, cam.transform.position );
         GazeRayRenderer.SetPosition(1, cam.transform.position+ ray.direction * lenghtRay);
+
+        // Space Bar to change input modality
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log(dropDown);
+            dropDown = (RayInputModality)((int)(dropDown+1) % nbInputInEnum);
+        }
     }
 }

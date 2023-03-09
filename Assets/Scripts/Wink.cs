@@ -77,11 +77,11 @@ public class Wink : MonoBehaviour
                 //right.text = EyeWeightings[EyeShape_v2.Eye_Right_Blink].ToString();
 
                 // If we wink only one eye, not when you naturally blink
-                if(EyeWeightings[EyeShape_v2.Eye_Left_Blink] > 0.7 && EyeWeightings[EyeShape_v2.Eye_Right_Blink] < 0.7)
+                if(EyeWeightings[EyeShape_v2.Eye_Left_Blink] > 0.8 && EyeWeightings[EyeShape_v2.Eye_Right_Blink] < 0.8)
                 {
                     onLeftWink();
                 }
-                if (EyeWeightings[EyeShape_v2.Eye_Right_Blink] > 0.7 && EyeWeightings[EyeShape_v2.Eye_Left_Blink] < 0.7)
+                if (EyeWeightings[EyeShape_v2.Eye_Right_Blink] > 0.8 && EyeWeightings[EyeShape_v2.Eye_Left_Blink] < 0.8)
                 {
                     onRightWink();
                 }

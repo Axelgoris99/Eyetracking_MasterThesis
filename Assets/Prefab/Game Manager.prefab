@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3094514883344875860}
   - component: {fileID: 2472564838691108278}
   - component: {fileID: 4111060928774658913}
+  - component: {fileID: 3732963498911711017}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -65,6 +66,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gazeRay: {fileID: 4111060928774658913}
+  GazeRayRenderer: {fileID: 3094514883344875860}
+  lenghtRay: 25
   cam: {fileID: 0}
   dropDown: 0
 --- !u!114 &700099266
@@ -99,7 +102,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e073e0902a7d3b14880a95f57a31efe4, type: 2}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -143,7 +146,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.8769978, g: 1, b: 0, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -206,3 +209,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GazeDirectionCombined: {x: 0, y: 0, z: 0}
+--- !u!114 &3732963498911711017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732963498246011351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4f1a3e9e7ffd447b5a77692beedb00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NeededToGetData: 1

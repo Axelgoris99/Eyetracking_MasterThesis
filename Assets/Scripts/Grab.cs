@@ -86,13 +86,24 @@ public class Grab : MonoBehaviour
             cubePos = objectHit.position;
             // Do something with the object that was hit by the raycast.
             selectedObject = objectHit.gameObject;
+            if(selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
+            {
+                comp.Grabbed = true;
+            }
             layerToInteractWith = 7;
         }
     }
 
     void ReleaseInteractable()
-    {
-        selectedObject = null;
+    {  
+        if (selectedObject != null)
+        {
+            if (selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
+            {
+                comp.Grabbed = false;
+            }
+            selectedObject = null;
+        }
         layerToInteractWith = 6;
     }
 
