@@ -12,7 +12,6 @@ public class Grab : MonoBehaviour
     private int layerToInteractWith;
     int layerMask = 1;
     private GameObject selectedObject;
-    private Transform parentObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -81,15 +80,12 @@ public class Grab : MonoBehaviour
             cubePos = objectHit.position;
             // Do something with the object that was hit by the raycast.
             selectedObject = objectHit.gameObject;
-            parentObject = selectedObject.transform.parent;
             layerToInteractWith = 7;
         }
     }
 
     void ReleaseInteractable()
     {
-        selectedObject.transform.parent = parentObject ;
-        parentObject = null;
         selectedObject = null;
         layerToInteractWith = 6;
     }
