@@ -9,6 +9,7 @@ public class Dwell : MonoBehaviour
 
     int layerMask = 1;
     private int layerToInteractWith;
+    [SerializeField] float timerRef = 2.0f;
     float timer = 2.0f;
     GameObject selectedObject;
     bool grabbed = false;
@@ -39,7 +40,7 @@ public class Dwell : MonoBehaviour
             if (selectedObject == null)
             {
                 selectedObject = hit.transform.gameObject;
-                timer = 2.0f;
+                timer = timerRef;
             }
             else
             {
@@ -59,6 +60,6 @@ public class Dwell : MonoBehaviour
     void releasedObject()
     {
         grabbed = false;
-        timer = 2.0f;
+        timer = timerRef;
     }
 }
