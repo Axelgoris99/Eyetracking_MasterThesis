@@ -12,6 +12,13 @@ public class Grab : MonoBehaviour
     private int layerToInteractWith;
     int layerMask = 1;
     private GameObject selectedObject;
+
+    public delegate void ObjectGrabbed();
+    public static event ObjectGrabbed onGrab;
+
+    public delegate void ObjectReleased();
+    public static event ObjectReleased onRelease;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +27,7 @@ public class Grab : MonoBehaviour
         WordRecognizer.onRelease += ReleaseInteractable;
         Wink.onLeftWink += HandleWink;
         Wink.onRightWink += HandleWink;
+        Dwell.onDwell += HandleDwell;
 
         if(cam == null)
         {
@@ -33,6 +41,8 @@ public class Grab : MonoBehaviour
 
         Wink.onLeftWink -= HandleWink;
         Wink.onRightWink -= HandleWink;
+
+        Dwell.onDwell -= HandleDwell;
     }
     // Update is called once per frame
     void Update()
@@ -91,6 +101,7 @@ public class Grab : MonoBehaviour
                 comp.Grabbed = true;
             }
             layerToInteractWith = 7;
+            onGrab();
         }
     }
 
@@ -105,6 +116,7 @@ public class Grab : MonoBehaviour
             selectedObject = null;
         }
         layerToInteractWith = 6;
+        onRelease();
     }
 
     void HandleWink()
@@ -116,6 +128,14 @@ public class Grab : MonoBehaviour
         else
         {
             ReleaseInteractable();
+        }
+    }
+
+    void HandleDwell()
+    {
+        if (selectedObject == null)
+        {
+            GrabInteractable();
         }
     }
 }
