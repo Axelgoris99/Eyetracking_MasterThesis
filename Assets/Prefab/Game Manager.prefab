@@ -106,10 +106,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3732963498246011353}
+  - component: {fileID: 3094514883344875860}
   - component: {fileID: 3732963498246011350}
   - component: {fileID: 3732963498246011352}
   - component: {fileID: 700099266}
-  - component: {fileID: 3094514883344875860}
   - component: {fileID: 2472564838691108278}
   - component: {fileID: 4111060928774658913}
   - component: {fileID: 3732963498911711017}
@@ -138,50 +138,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3732963498246011350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3732963498246011351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc23eb746872d842a0b646770920043, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  cubePos: {x: 0, y: 0, z: 0}
-  camPlane: {fileID: 0}
---- !u!114 &3732963498246011352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3732963498246011351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59dc83ca107518f428d00f7f340bcd93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gazeRay: {fileID: 4111060928774658913}
-  GazeRayRenderer: {fileID: 3094514883344875860}
-  lenghtRay: 25
-  cam: {fileID: 0}
-  dropDown: 0
---- !u!114 &700099266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3732963498246011351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 745a44e6f54b0d341a1cfc60f7056b5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &3094514883344875860
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -281,6 +237,50 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &3732963498246011350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732963498246011351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc23eb746872d842a0b646770920043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  cubePos: {x: 0, y: 0, z: 0}
+  camPlane: {fileID: 0}
+--- !u!114 &3732963498246011352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732963498246011351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59dc83ca107518f428d00f7f340bcd93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gazeRay: {fileID: 4111060928774658913}
+  GazeRayRenderer: {fileID: 3094514883344875860}
+  lenghtRay: 25
+  cam: {fileID: 0}
+  dropDown: 0
+--- !u!114 &700099266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732963498246011351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 745a44e6f54b0d341a1cfc60f7056b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2472564838691108278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3732963498246011351}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73dd34c4ece3f0e479ddc140b64aadaf, type: 3}
   m_Name: 
