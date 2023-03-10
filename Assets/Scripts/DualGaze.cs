@@ -9,7 +9,7 @@ public class DualGaze : MonoBehaviour
     public static event SelectionDualGaze onSelected;
 
     [SerializeField] private GameObject objectToSpawn;
-
+    [SerializeField] private float distFlag;
     // Think about the layers to setup in unity !!
     int layerMask = 1;
     int layerMaskFlag = 8;
@@ -54,7 +54,7 @@ public class DualGaze : MonoBehaviour
                 // In case the flag is still up 
                 if(flag != null) { Destroy(flag); }
                 flag = Instantiate(objectToSpawn);
-                flag.transform.position = hitPoint + hit.normal * 0.01f;
+                flag.transform.position = hitPoint + hit.normal.normalized * flag.GetComponent<BoxCollider>().size.z * distFlag;
                 flag.SetActive(true);
             }
             if(hit.transform.gameObject != selectedObject && hit.transform.gameObject != flag)
