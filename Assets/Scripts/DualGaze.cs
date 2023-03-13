@@ -113,6 +113,11 @@ public class DualGaze : MonoBehaviour
         flag = Instantiate(objectToSpawn);
         flag.transform.position = convexHull[minIndex];
         flag.SetActive(true);
+        
+        // We need to offset it a little bit, otherwise if you come passing by one of the convex hull point, you automatically select it!
+        Vector3 directionFromMiddleToConvexHullPoint = flag.transform.position - selectedObject.transform.position;
+        //flag.transform.position = flag.transform.position + directionFromMiddleToConvexHullPoint.normalized*flag.GetComponent<Bounds>().size.x/2;        
+        flag.transform.position = flag.transform.position + directionFromMiddleToConvexHullPoint * 0.1f;
 
     }
 
