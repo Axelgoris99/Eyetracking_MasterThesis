@@ -15,13 +15,19 @@ public class WordRecognizer : MonoBehaviour
 
     public delegate void ReleaseAction();
     public static event ReleaseAction onRelease;
+
+    public delegate void RotationAxis(Vector3 axis);
+    public static event RotationAxis onRotationAxisChanged;
+
+    public delegate void RotationDirection();
+    public static event RotationDirection onRotationDirectionChanged;
     
     // Start is called before the first frame update
     void Start()
     {
         keywords.Add("attrape", () =>
         {
-            Debug.Log("grabbed");
+            Debug.Log("Grabbed");
             if (onGrab != null)
             {
                 onGrab();
@@ -29,12 +35,45 @@ public class WordRecognizer : MonoBehaviour
         });
         keywords.Add("lache", () =>
         {
-            Debug.Log("release");
+            Debug.Log("Release");
             if (onRelease != null)
             {
                 onRelease();
             }
         });
+
+        keywords.Add("X", () =>
+        {
+            Debug.Log("X");
+            onRotationAxisChanged(new Vector3(1.0f, 0.0f,0.0f));
+        });
+        keywords.Add("Y", () =>
+        {
+            Debug.Log("Y");
+            onRotationAxisChanged(new Vector3(0.0f, 1.0f, 0.0f));
+        });
+        keywords.Add("Z", () =>
+        {
+            Debug.Log("Z");
+            onRotationAxisChanged(new Vector3(0.0f, 0.0f, 1.0f));
+        });
+
+        keywords.Add("positif", () =>
+        {
+            if(onRotationDirectionChanged != null)
+            {
+                onRotationDirectionChanged();
+            }
+        });
+
+        keywords.Add("négatif", () =>
+        {
+            if (onRotationDirectionChanged != null)
+            {
+                onRotationDirectionChanged();
+            }
+        });
+
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
         keywordRecognizer.Start();

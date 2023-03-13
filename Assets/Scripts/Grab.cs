@@ -12,6 +12,12 @@ public class Grab : MonoBehaviour
     private int layerToInteractWith;
     int layerMask = 1;
     private GameObject selectedObject;
+    public enum rotation
+    {
+        positive,
+        negative,
+    }
+    public rotation positiveRotation;
 
     public delegate void ObjectGrabbed();
     public static event ObjectGrabbed onGrab;
@@ -68,13 +74,31 @@ public class Grab : MonoBehaviour
             {
                 selectedObject.transform.position = hit.point;
             }
+            int rotationDirection = 1;
+            if(positiveRotation == rotation.negative)
+            {
+                rotationDirection = -1;
+            }
+            float value = rotationDirection * 500.0f * Time.deltaTime;
+            Debug.Log(value);
+            if (Input.GetKey(KeyCode.X))
+            {
+                selectedObject.transform.Rotate(value, 0.0f, 0.0f, Space.Self);
+            }
+            if (Input.GetKey(KeyCode.Y))
+            {
+                selectedObject.transform.Rotate(0.0f, value, 0.0f, Space.Self);          
+            }
+            if (Input.GetKey(KeyCode.Z)) {
+                selectedObject.transform.Rotate(0.0f, 0.0f, value, Space.Self);
+            }
         }
-
-        if (Input.GetKey(KeyCode.Z))
+        
+        if (Input.GetKey(KeyCode.A))
         {
             camPlane.transform.localPosition += new Vector3(0, 0, 0.01f); 
         }
-        if (Input.GetKey(KeyCode.S) && camPlane.transform.localPosition.z > 0.08f)
+        if (Input.GetKey(KeyCode.E) && camPlane.transform.localPosition.z > 0.08f)
         {
             camPlane.transform.localPosition += new Vector3(0, 0, -0.01f);
         }
@@ -100,6 +124,7 @@ public class Grab : MonoBehaviour
             ReleaseInteractable();
         }
 
+        if(Input.GetButtonUp())
         // For debugging purpose
         // Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);       
     }
