@@ -6,10 +6,13 @@ using UnityEngine.Windows.Speech;
 
 public class WordRecognizer : MonoBehaviour
 {
+    // Speech inputs
     [SerializeField]
     private KeywordRecognizer keywordRecognizer;
     private Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
 
+    // Events to throw when recognizing words
+    #region events
     public delegate void GrabAction();
     public static event GrabAction onGrab;
 
@@ -27,10 +30,12 @@ public class WordRecognizer : MonoBehaviour
 
     public delegate void TranslationMode();
     public static event TranslationMode onTranslationEnabled;
-    
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
+        // Keywords added and actions as well
+        #region action and keywords
         keywords.Add("attrape", () =>
         {
             Debug.Log("Grabbed");
@@ -51,17 +56,26 @@ public class WordRecognizer : MonoBehaviour
         keywords.Add("X", () =>
         {
             Debug.Log("X");
-            onRotationAxisChanged(new Vector3(1.0f, 0.0f,0.0f));
+            if (onRotationAxisChanged != null)
+            {
+                onRotationAxisChanged(new Vector3(1.0f, 0.0f, 0.0f));
+            }
         });
         keywords.Add("Y", () =>
         {
             Debug.Log("Y");
-            onRotationAxisChanged(new Vector3(0.0f, 1.0f, 0.0f));
+            if (onRotationAxisChanged != null)
+            {
+                onRotationAxisChanged(new Vector3(0.0f, 1.0f, 0.0f));
+            }
         });
         keywords.Add("Z", () =>
         {
             Debug.Log("Z");
-            onRotationAxisChanged(new Vector3(0.0f, 0.0f, 1.0f));
+            if (onRotationAxisChanged != null)
+            {
+                onRotationAxisChanged(new Vector3(0.0f, 0.0f, 1.0f));
+            }
         });
 
         keywords.Add("positif", () =>
@@ -99,12 +113,15 @@ public class WordRecognizer : MonoBehaviour
                 onTranslationEnabled();
             }
         });
+        #endregion
 
+        // Start the recognizer
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
         keywordRecognizer.Start();
     }
     
+    // If we recognize a speech input, we throw the associated callback
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
         System.Action keywordAction;

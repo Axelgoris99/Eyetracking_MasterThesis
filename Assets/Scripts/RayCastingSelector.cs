@@ -36,11 +36,13 @@ public class RayCastingSelector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // This way, we know the number of input, we can use it for % operation
         nbInputInEnum = System.Enum.GetValues(typeof(RayInputModality)).Length;
         //if(XRGeneralSettings.Instance.Manager.activeLoader != null)
         //{
         //    useMouse = false;
         //}
+        // If there is already a singleton, destroy this instance
         if (_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -49,6 +51,7 @@ public class RayCastingSelector : MonoBehaviour
         {
             _instance = this;
         }
+        // check that a cam has been assigned or get the main one
         if(cam == null)
         {
             cam = Camera.main;
@@ -58,6 +61,7 @@ public class RayCastingSelector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Change the ray input depending on the selecting option in the enum
         switch (dropDown)
         {
             case RayInputModality.EyeTracking:
@@ -71,14 +75,16 @@ public class RayCastingSelector : MonoBehaviour
                 ray = new Ray(cam.transform.position, cam.transform.forward);
                 break;
         }
+        // Ray Renderer using the input selected before
         GazeRayRenderer.SetPosition(0, cam.transform.position );
         GazeRayRenderer.SetPosition(1, cam.transform.position+ ray.direction * lenghtRay);
 
         // Space Bar to change input modality
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log(dropDown);
+            // Cycle through the enum options Mouse --> Eye-Tracking --> Head-Tracking --> Mouse...
             dropDown = (RayInputModality)((int)(dropDown+1) % nbInputInEnum);
+            Debug.Log("Current Input Modality for Selection " + dropDown);
         }
     }
 }

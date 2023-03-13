@@ -52,6 +52,7 @@ public class GazeRay : MonoBehaviour
             else return;
         }
 
+        // Main magic operates here : We get the direction of both gaze or the one eye that was open
         GazeDirectionCombined = Camera.main.transform.TransformDirection(GazeDirectionCombinedLocal);
     }
     private void Release()

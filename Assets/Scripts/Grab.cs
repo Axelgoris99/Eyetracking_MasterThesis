@@ -6,7 +6,6 @@ using UnityEngine.InputSystem.HID;
 public class Grab : MonoBehaviour
 {
     [SerializeField] private Camera cam;
-    [SerializeField] private Vector3 cubePos;
 
     // How to select the pointed object
     public GameObject camPlane;
@@ -35,9 +34,14 @@ public class Grab : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // First Rotation to calculate 
         CalculateRotation();
         rotationValue = rotationDirection * 500.0f * Time.deltaTime;
+
+        // Layer for the raycasting
         layerToInteractWith = 6;
+
+        //Events From the other inputs
         WordRecognizer.onGrab += RaycastAgainstInteractable;
         WordRecognizer.onRelease += ReleaseInteractable;
         WordRecognizer.onRotationAxisChanged += UpdateRotationAxis;
@@ -45,13 +49,12 @@ public class Grab : MonoBehaviour
         WordRecognizer.onRotationEnabled += ActivateRotationMode;
         WordRecognizer.onTranslationEnabled += ActivateTranslationMode;
         
-        
         Wink.onLeftWink += HandleWink;
         Wink.onRightWink += HandleWink;
         Dwell.onDwell += HandleDwell;
         DualGaze.onSelected += GrabInteractable;
        
-
+        // explicit
         if (cam == null)
         {
             cam = Camera.main;
@@ -59,6 +62,7 @@ public class Grab : MonoBehaviour
     }
     private void OnDisable()
     {
+        // Events Unregistration
         WordRecognizer.onGrab -= RaycastAgainstInteractable;
         WordRecognizer.onRelease -= ReleaseInteractable;
         WordRecognizer.onRotationAxisChanged -= UpdateRotationAxis;
@@ -77,16 +81,10 @@ public class Grab : MonoBehaviour
         // Bit shift the index of the layer to get a bit mask
         layerMask = 1 << layerToInteractWith;
 
-        // This would cast rays only against colliders in layerToInteractWith.
-        // But instead we want to collide against everything except layer blabla. The ~ operator does this, it inverts a bitmask.
-        // layerMask = ~layerMask;
-
-        //Ray ray2 = RayCastingSelector.Instance.ray;
-        //Debug.DrawRay(ray2.origin, ray2.direction, Color.yellow);
-
         // Object is translated along a plane
         if (selectedObject != null)
         {
+            // If we're in translation mode
             if (!rotationMode)
             {
                 Ray ray = RayCastingSelector.Instance.ray;
@@ -97,6 +95,7 @@ public class Grab : MonoBehaviour
                     selectedObject.transform.position = hit.point;
                 }
             }
+            // If we're in rotation
             if (rotationMode)
             {
                 // TO DO ? Head Tracking ?
@@ -105,6 +104,7 @@ public class Grab : MonoBehaviour
            
         }
         
+        // Move the plane along the depth direction
         if (Input.GetKey(KeyCode.A))
         {
             camPlane.transform.localPosition += new Vector3(0, 0, 0.01f); 
@@ -113,7 +113,9 @@ public class Grab : MonoBehaviour
         {
             camPlane.transform.localPosition += new Vector3(0, 0, -0.01f);
         }
-
+        
+        
+        // Throw a ray or release object
         if (Input.GetKeyDown(KeyCode.F))
         {
             RaycastAgainstInteractable();
@@ -139,45 +141,62 @@ public class Grab : MonoBehaviour
         // Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);       
     }
 
+    /// <summary>
+    /// We throw a ray against the object from the interactable layer. If we touch something, we grab it
+    /// </summary>
     void RaycastAgainstInteractable()
     {
         Ray ray = RayCastingSelector.Instance.ray;
         RaycastHit hit;
-        //Debug.Log("Down");
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
             GrabInteractable(hit.transform);
         }
     }
+    /// <summary>
+    /// Grab the object that was hit. By selecting it, it now moves with our selected ray/method.
+    /// </summary>
+    /// <param name="objectHit">The object that we want to move along the plane.</param>
     void GrabInteractable(Transform objectHit)
     {
+        // Move the plane on which the object will move
         camPlane.transform.position = objectHit.transform.position;
-
-        cubePos = objectHit.position;
         // Do something with the object that was hit by the raycast.
         selectedObject = objectHit.gameObject;
+        // if the object is one of the hands, we don't want to update their position, so we switch the Grabbed boolean on, stopping them from updating
         if (selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
         {
             comp.Grabbed = true;
         }
+        // We want to raycast against the plane to move the object, we don't want selection to happen anymore so we change the layer to interact with
         layerToInteractWith = 7;
+        // Throw an event to do stuff in other scripts
         onGrab();
     }
 
+    /// <summary>
+    /// We release the selected object by setting it to null
+    /// </summary>
     void ReleaseInteractable()
     {
         if (selectedObject != null)
         {
+            // Reset the Grabbed boolean if needed
             if (selectedObject.TryGetComponent<CopyPositionHands>(out CopyPositionHands comp))
             {
                 comp.Grabbed = false;
             }
             selectedObject = null;
         }
+        // Back in selection mode so we change the layer again
         layerToInteractWith = 6;
+        // Event to release
         onRelease();
     }
 
+    /// <summary>
+    /// Handle Wink event. If we have an object selected, we release it, else, we raycast to grab.
+    /// </summary>
     void HandleWink()
     {
         if (selectedObject == null)
@@ -190,19 +209,27 @@ public class Grab : MonoBehaviour
         }
     }
 
-    void HandleDwell()
+    // If we dwell, we select the object
+    void HandleDwell(GameObject selection)
     {
         if (selectedObject == null)
         {
-            RaycastAgainstInteractable();
+           GrabInteractable(selection.transform);
         }
     }
 
+    /// <summary>
+    /// We change the rotation axis to be X,Y,Z
+    /// </summary>
+    /// <param name="newAxis">the axis around which the object will rotate</param>
     void UpdateRotationAxis(Vector3 newAxis)
     {
         rotationAxis = newAxis;
     }
 
+    /// <summary>
+    /// Update the direction of the rotation : positive or negative direction
+    /// </summary>
     void UpdateRotationDirection()
     {
         switch (positiveRotation)
@@ -218,12 +245,17 @@ public class Grab : MonoBehaviour
                 
         }
     }
-    // Interpolate {0,1} to {-1,1}
+    /// <summary>
+    /// Interpolate {0,1} to {-1,1} for the rotation enum to be usable directly
+    /// </summary>
     void CalculateRotation()
     {
         rotationDirection = (int)positiveRotation * 2 - 1;
     }
 
+    /// <summary>
+    /// Some inputs to rotate the object with the keyboard and check how it works
+    /// </summary>
     void RotationUsingKeyboard()
     {
         CalculateRotation();
@@ -249,10 +281,16 @@ public class Grab : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Switch between rotation and translation
+    /// </summary>
     void ActivateRotationMode()
     {
         rotationMode = !rotationMode;
     }
+    /// <summary>
+    /// Activate translation and translation only
+    /// </summary>
     void ActivateTranslationMode()
     {
         rotationMode = false;

@@ -7,10 +7,11 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class DualGaze : MonoBehaviour
 {
-  
+    // Events
     public delegate void SelectionDualGaze(Transform selection);
     public static event SelectionDualGaze onSelected;
 
+    // the objects to spawn
     [SerializeField] private GameObject objectToSpawn;
     public GameObject sphere;
     // Think about the layers to setup in unity !!
@@ -18,12 +19,16 @@ public class DualGaze : MonoBehaviour
     int layerMaskFlag = 8;
     int layerMaskPlane = 7;
     private int layerToInteractWith;
+
+    // The selected object and the flag object
     GameObject selectedObject;
     GameObject flag;
     bool grabbed = false;
+    // Timer
     [SerializeField] float timerRef = 2.0f;
     float timer = 2.0f;
     public GameObject camPlane;
+    // Ray
     Ray ray;
     RaycastHit hit;
     Vector3 hitPoint;
@@ -33,6 +38,7 @@ public class DualGaze : MonoBehaviour
         Grab.onGrab += grabbedObject;
         Grab.onRelease += releasedObject;
 
+        // Layer preparation
         layerToInteractWith = 6;
         layerMask = 1 << layerToInteractWith;
         layerMaskFlag = 1 << 8;
@@ -124,29 +130,37 @@ public class DualGaze : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Ray casting from the singleton
         ray = RayCastingSelector.Instance.ray;
         if (grabbed) { return; }
         
+        // Throw a ray against the interactable layer mask
         if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
+            //If we touch something, we reset the timer so that the flag stays as long as you're watching the object
             timer = timerRef;
             if (selectedObject != hit.transform.gameObject)
             {
+                // the point that was hit and the selected object are set, the camera plane as well
                 hitPoint = hit.point;
                 selectedObject = hit.transform.gameObject;
                 camPlane.transform.position = selectedObject.transform.position;
+                // We launch the coroutine that will calculate the projection of the box Collider on the plane where we will place the flag
                 StartCoroutine(WaitForEndOfFrameSoThatThePlaneHasTimeToMove());
             }
         }
         
+        //Throw a ray against the flag layer mask
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMaskFlag))
-        {
+        {   
+            // if we touch the flag, we select the object and destroy the flag
             if (hit.transform.gameObject == flag)
             {
                 onSelected(selectedObject.transform);
                 Destroy(flag);
             }
         }
+        // If the timer reaches zero, we reset the selection and destroy the flag
         timer -= Time.deltaTime;
         if(timer < 0.0f)
         {
@@ -154,10 +168,16 @@ public class DualGaze : MonoBehaviour
             Destroy(flag);
         }
     }
+    /// <summary>
+    /// We already have an object
+    /// </summary>
     void grabbedObject()
     {
         grabbed = true;
     }
+    /// <summary>
+    /// Release an object by saying that we don't grab it and deselect every object
+    /// </summary>
     void releasedObject()
     {
         grabbed = false;
