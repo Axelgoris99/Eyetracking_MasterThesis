@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
@@ -25,6 +26,7 @@ public class DualGaze : MonoBehaviour
     public GameObject camPlane;
     Ray ray;
     RaycastHit hit;
+    Vector3 hitPoint;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,12 +47,13 @@ public class DualGaze : MonoBehaviour
 
     IEnumerator WaitForEndOfFrameSoThatThePlaneHasTimeToMove()
     {
-        // suspend until the end
+        // suspend until the end of some frames, otherwise the plane does not have time to move... ?
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
-        Debug.Log("test");
+        yield return new WaitForEndOfFrame();
         BoxCollider bounds = selectedObject.GetComponent<BoxCollider>();
 
+        // Get the position of the cube vertex in local space
         Vector3[] corners = new Vector3[8];
         corners[0] = bounds.center + new Vector3(bounds.size.x / 2, bounds.size.y / 2, bounds.size.z / 2);
         corners[1] = bounds.center + new Vector3(bounds.size.x / 2, bounds.size.y / 2, -bounds.size.z / 2);
@@ -61,22 +64,56 @@ public class DualGaze : MonoBehaviour
         corners[6] = bounds.center + new Vector3(-bounds.size.x / 2, -bounds.size.y / 2, bounds.size.z / 2);
         corners[7] = bounds.center + new Vector3(-bounds.size.x / 2, -bounds.size.y / 2, -bounds.size.z / 2);
 
+        // Get the vertex of the cube in world position
         Vector3[] worldPosition = new Vector3[8];
         for (int i = 0; i < corners.Length; i++)
         {
             worldPosition[i] = selectedObject.transform.TransformPoint(corners[i]);
         }
+        
+        // Recreate the view of the camera on the plane - projection
+        List<Vector3> hitPositionPlane = new List<Vector3>();
         for (int i = 0; i < corners.Length; i++)
         {
             RaycastHit hitPlane;
             Ray rayVertex = new Ray(ray.origin, worldPosition[i] - ray.origin);
             if (Physics.Raycast(rayVertex, out hitPlane, Mathf.Infinity, layerMaskPlane))
             {
-                flag = Instantiate(sphere);
-                flag.transform.position = hitPlane.point;
-                flag.SetActive(true);
+                hitPositionPlane.Add(hitPlane.point);
             }
         }
+        
+        // Return the convex hull of the points
+        List<Vector3> convexHull = JarvisMarchAlgorithm.GetConvexHull(hitPositionPlane);
+
+        // Find the point of intersection on the plane for the first hit point
+        RaycastHit hitTargetPlane;
+        Ray rayTargetVertex = new Ray(ray.origin, hitPoint - ray.origin);
+        Vector3 planeIntersection = new Vector3();
+        if (Physics.Raycast(rayTargetVertex, out hitTargetPlane, Mathf.Infinity, layerMaskPlane))
+        {
+            planeIntersection = hitTargetPlane.point;
+        }
+
+        // Find the closest point on the hull in respect to the first hit point
+        float distance = Mathf.Infinity;
+        int minIndex = 0;
+        for(int i = 0; i < convexHull.Count; i++)
+        {
+            float dist = Vector3.Distance(convexHull[i], planeIntersection);
+            if (dist < distance) {
+                minIndex = i;
+                distance = dist;
+                Debug.Log("Distance " + distance + "  index" + i);
+            };
+        }
+
+        // The point to spawn the object is convexHull[minIndex]
+        if(flag != null) { Destroy(flag); }
+        flag = Instantiate(objectToSpawn);
+        flag.transform.position = convexHull[minIndex];
+        flag.SetActive(true);
+
     }
 
     // Update is called once per frame
@@ -90,6 +127,7 @@ public class DualGaze : MonoBehaviour
             timer = timerRef;
             if (selectedObject != hit.transform.gameObject)
             {
+                hitPoint = hit.point;
                 selectedObject = hit.transform.gameObject;
                 camPlane.transform.position = selectedObject.transform.position;
                 StartCoroutine(WaitForEndOfFrameSoThatThePlaneHasTimeToMove());
