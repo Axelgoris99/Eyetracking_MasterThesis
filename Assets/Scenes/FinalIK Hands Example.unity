@@ -149,7 +149,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80328589}
-  m_LocalRotation: {x: -0.7156383, y: 0.051851302, z: 0.10198566, w: 0.6890372}
+  m_LocalRotation: {x: 0.20661657, y: -0.6756012, z: 0.2069775, w: -0.67678136}
   m_LocalPosition: {x: -0.19000006, y: 1.493, z: 0.51999986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -169,8 +169,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.15517429, y: 0.19728395, z: 0.14171731}
-  m_Center: {x: -0.008963115, y: 0.01812528, z: 0.011374462}
+  m_Size: {x: 0.21818742, y: 0.1335481, z: 0.13073066}
+  m_Center: {x: -0.07038134, y: -0.004163751, z: 0.0031658038}
 --- !u!114 &80328592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -756,7 +756,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 934768183}
   m_LocalRotation: {x: -0.00000017136335, y: -0.00000008940697, z: 0.000000044703484, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.0169, y: 0, z: -0}
   m_LocalScale: {x: 0.1, y: 0.09999997, z: 0.09999998}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1012,7 +1012,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260997029}
   m_LocalRotation: {x: 0.000000059604645, y: 0.00000032782555, z: -0.000000029802322, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.0123, y: 0, z: 0}
   m_LocalScale: {x: 0.100000024, y: 0.100000046, z: 0.09999999}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1288,7 +1288,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1938263177}
-  m_LocalRotation: {x: -0.7156383, y: 0.05185145, z: 0.101985745, w: 0.6890372}
+  m_LocalRotation: {x: -0.2788063, y: 0.66336876, z: -0.20178284, w: 0.6644492}
   m_LocalPosition: {x: 0.196, y: 1.447, z: 0.432}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1308,8 +1308,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1314622, y: 0.1335481, z: 0.13073066}
-  m_Center: {x: 0.00517752, y: -0.004163742, z: 0.0031658038}
+  m_Size: {x: 0.21818742, y: 0.1335481, z: 0.13073066}
+  m_Center: {x: -0.07038134, y: -0.004163751, z: 0.0031658038}
 --- !u!114 &1938263180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3548,7 +3548,7 @@ MonoBehaviour:
       bones: []
       target: {fileID: 80328590}
       positionWeight: 1
-      rotationWeight: 0
+      rotationWeight: 1
       shoulderRotationWeight: 1
       shoulderRotationMode: 0
       shoulderTwistWeight: 1
@@ -3570,7 +3570,7 @@ MonoBehaviour:
       bones: []
       target: {fileID: 1938263178}
       positionWeight: 1
-      rotationWeight: 0
+      rotationWeight: 1
       shoulderRotationWeight: 1
       shoulderRotationMode: 0
       shoulderTwistWeight: 1

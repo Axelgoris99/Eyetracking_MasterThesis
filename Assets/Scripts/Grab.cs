@@ -74,7 +74,7 @@ public class Grab : MonoBehaviour
         {
             camPlane.transform.localPosition += new Vector3(0, 0, 0.01f); 
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && camPlane.transform.localPosition.z > 0.08f)
         {
             camPlane.transform.localPosition += new Vector3(0, 0, -0.01f);
         }
