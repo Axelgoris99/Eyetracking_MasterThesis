@@ -1173,6 +1173,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 700099266, guid: 2ad59cdc6595ad248a337f3ab801eda7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1000639999, guid: 2ad59cdc6595ad248a337f3ab801eda7, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -1195,7 +1199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1943904230633156253, guid: 2ad59cdc6595ad248a337f3ab801eda7, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3732963498246011350, guid: 2ad59cdc6595ad248a337f3ab801eda7, type: 3}
       propertyPath: cam

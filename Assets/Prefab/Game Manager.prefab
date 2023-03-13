@@ -109,9 +109,9 @@ GameObject:
   - component: {fileID: 3094514883344875860}
   - component: {fileID: 3732963498246011350}
   - component: {fileID: 3732963498246011352}
-  - component: {fileID: 700099266}
   - component: {fileID: 2472564838691108278}
   - component: {fileID: 4111060928774658913}
+  - component: {fileID: 700099266}
   - component: {fileID: 3732963498911711017}
   - component: {fileID: 1647102792}
   - component: {fileID: 1943904230633156253}
@@ -269,18 +269,6 @@ MonoBehaviour:
   lenghtRay: 25
   cam: {fileID: 0}
   dropDown: 0
---- !u!114 &700099266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3732963498246011351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 745a44e6f54b0d341a1cfc60f7056b5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2472564838691108278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +297,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GazeDirectionCombined: {x: 0, y: 0, z: 0}
+--- !u!114 &700099266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732963498246011351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 745a44e6f54b0d341a1cfc60f7056b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3732963498911711017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,4 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToSpawn: {fileID: 1000639995}
+  sphere: {fileID: 0}
   timerRef: 1
+  camPlane: {fileID: 0}
