@@ -70,6 +70,15 @@ public class Grab : MonoBehaviour
             }
         }
 
+        if (Input.GetKey(KeyCode.Z))
+        {
+            camPlane.transform.localPosition += new Vector3(0, 0, 0.01f); 
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            camPlane.transform.localPosition += new Vector3(0, 0, -0.01f);
+        }
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             RaycastAgainstInteractable();
