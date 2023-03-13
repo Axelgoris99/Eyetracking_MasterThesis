@@ -8,17 +8,24 @@ public class Grab : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private Vector3 cubePos;
 
+    // How to select the pointed object
     public GameObject camPlane;
     private int layerToInteractWith;
     int layerMask = 1;
     private GameObject selectedObject;
+    // rotation of the object
+    public bool rotationMode = false;
     public enum rotation
     {
         positive,
         negative,
     }
     public rotation positiveRotation;
+    int rotationDirection = 1;
+    float rotationValue = 1;
+    Vector3 rotationAxis = Vector3.right;
 
+    // Event when the object is grabbed or released
     public delegate void ObjectGrabbed();
     public static event ObjectGrabbed onGrab;
 
@@ -28,13 +35,22 @@ public class Grab : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CalculateRotation();
+        rotationValue = rotationDirection * 500.0f * Time.deltaTime;
         layerToInteractWith = 6;
         WordRecognizer.onGrab += RaycastAgainstInteractable;
         WordRecognizer.onRelease += ReleaseInteractable;
+        WordRecognizer.onRotationAxisChanged += UpdateRotationAxis;
+        WordRecognizer.onRotationDirectionChanged += UpdateRotationDirection;
+        WordRecognizer.onRotationEnabled += ActivateRotationMode;
+        WordRecognizer.onTranslationEnabled += ActivateTranslationMode;
+        
+        
         Wink.onLeftWink += HandleWink;
         Wink.onRightWink += HandleWink;
         Dwell.onDwell += HandleDwell;
         DualGaze.onSelected += GrabInteractable;
+       
 
         if (cam == null)
         {
@@ -45,11 +61,15 @@ public class Grab : MonoBehaviour
     {
         WordRecognizer.onGrab -= RaycastAgainstInteractable;
         WordRecognizer.onRelease -= ReleaseInteractable;
-
+        WordRecognizer.onRotationAxisChanged -= UpdateRotationAxis;
+        WordRecognizer.onRotationDirectionChanged -= UpdateRotationDirection;
+        WordRecognizer.onRotationEnabled -= ActivateRotationMode;
+        WordRecognizer.onTranslationEnabled -= ActivateTranslationMode;
+        
         Wink.onLeftWink -= HandleWink;
         Wink.onRightWink -= HandleWink;
-
         Dwell.onDwell -= HandleDwell;
+        DualGaze.onSelected -= GrabInteractable;
     }
     // Update is called once per frame
     void Update()
@@ -67,31 +87,22 @@ public class Grab : MonoBehaviour
         // Object is translated along a plane
         if (selectedObject != null)
         {
-            Ray ray = RayCastingSelector.Instance.ray;
-            RaycastHit hit;
-            //Debug.Log("Selected");
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            if (!rotationMode)
             {
-                selectedObject.transform.position = hit.point;
+                Ray ray = RayCastingSelector.Instance.ray;
+                RaycastHit hit;
+                //Debug.Log("Selected");
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                {
+                    selectedObject.transform.position = hit.point;
+                }
             }
-            int rotationDirection = 1;
-            if(positiveRotation == rotation.negative)
+            if (rotationMode)
             {
-                rotationDirection = -1;
+                // TO DO ? Head Tracking ?
             }
-            float value = rotationDirection * 500.0f * Time.deltaTime;
-            Debug.Log(value);
-            if (Input.GetKey(KeyCode.X))
-            {
-                selectedObject.transform.Rotate(value, 0.0f, 0.0f, Space.Self);
-            }
-            if (Input.GetKey(KeyCode.Y))
-            {
-                selectedObject.transform.Rotate(0.0f, value, 0.0f, Space.Self);          
-            }
-            if (Input.GetKey(KeyCode.Z)) {
-                selectedObject.transform.Rotate(0.0f, 0.0f, value, Space.Self);
-            }
+            RotationUsingKeyboard();
+           
         }
         
         if (Input.GetKey(KeyCode.A))
@@ -124,7 +135,6 @@ public class Grab : MonoBehaviour
             ReleaseInteractable();
         }
 
-        if(Input.GetButtonUp())
         // For debugging purpose
         // Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);       
     }
@@ -186,6 +196,66 @@ public class Grab : MonoBehaviour
         {
             RaycastAgainstInteractable();
         }
+    }
+
+    void UpdateRotationAxis(Vector3 newAxis)
+    {
+        rotationAxis = newAxis;
+    }
+
+    void UpdateRotationDirection()
+    {
+        switch (positiveRotation)
+        {
+            case rotation.positive:
+                positiveRotation = rotation.negative;
+                CalculateRotation();
+                break;
+            case rotation.negative:
+                positiveRotation = rotation.positive;
+                CalculateRotation();
+                break;
+                
+        }
+    }
+    // Interpolate {0,1} to {-1,1}
+    void CalculateRotation()
+    {
+        rotationDirection = (int)positiveRotation * 2 - 1;
+    }
+
+    void RotationUsingKeyboard()
+    {
+        CalculateRotation();
+        rotationValue = rotationDirection * 500.0f * Time.deltaTime;
+        if (Input.GetKey(KeyCode.X))
+        {
+            rotationAxis = Vector3.right;
+            selectedObject.transform.Rotate(rotationAxis * rotationValue, Space.Self);
+        }
+        if (Input.GetKey(KeyCode.Y))
+        {
+            rotationAxis = Vector3.up;
+            selectedObject.transform.Rotate(rotationAxis * rotationValue, Space.Self);
+        }
+        if (Input.GetKey(KeyCode.Z))
+        {
+            rotationAxis = Vector3.forward;
+            selectedObject.transform.Rotate(rotationAxis * rotationValue, Space.Self);
+        }
+        if (Input.GetKey(KeyCode.R))
+        {
+            selectedObject.transform.Rotate(rotationAxis * rotationValue, Space.Self);
+        }
+    }
+    
+    void ActivateRotationMode()
+    {
+        rotationMode = !rotationMode;
+    }
+    void ActivateTranslationMode()
+    {
+        rotationMode = false;
     }
 }
 

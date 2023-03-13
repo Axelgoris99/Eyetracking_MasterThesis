@@ -21,6 +21,12 @@ public class WordRecognizer : MonoBehaviour
 
     public delegate void RotationDirection();
     public static event RotationDirection onRotationDirectionChanged;
+
+    public delegate void RotationMode();
+    public static event RotationMode onRotationEnabled;
+
+    public delegate void TranslationMode();
+    public static event TranslationMode onTranslationEnabled;
     
     // Start is called before the first frame update
     void Start()
@@ -60,17 +66,37 @@ public class WordRecognizer : MonoBehaviour
 
         keywords.Add("positif", () =>
         {
-            if(onRotationDirectionChanged != null)
+            Debug.Log("positif");
+            if (onRotationDirectionChanged != null)
             {
                 onRotationDirectionChanged();
             }
         });
 
-        keywords.Add("négatif", () =>
+        keywords.Add("negatif", () =>
         {
+            Debug.Log("négatif");
             if (onRotationDirectionChanged != null)
             {
                 onRotationDirectionChanged();
+            }
+        });
+
+        keywords.Add("rotation", () =>
+        {
+            Debug.Log("rotation");
+            if (onRotationEnabled != null)
+            {
+                onRotationEnabled();
+            }
+        });
+
+        keywords.Add("translation", () =>
+        {
+            Debug.Log("translation");
+            if (onTranslationEnabled != null)
+            {
+                onTranslationEnabled();
             }
         });
 
